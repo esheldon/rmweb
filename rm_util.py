@@ -144,7 +144,7 @@ class Cluster:
 
         link_list="%s | %s | %s" % (findlink,navilink,editlink)
 
-        print "         <table class='cluster'>"
+        print "         <table class='cluster' width=1000>"
         print "           <tr>"
         print "             <td align='left'>"
         print "               <font size=5>"+mainurl+"</font>"
@@ -194,10 +194,24 @@ class Cluster:
                'comments':comments,
                'id':id}
 
+        query="""
+        update 
+            %(tbname)s
+        set 
+            comments=?
+        where
+            %(idname)s = %(id)s
+
+        """ % {'tbname':tbname,'idname':idname,
+               'id':id}
+
+
+
         try:
             with sqlite_util.SqliteConnection(dbfile) as conn:
-                c=conn.execute(query)
-
+                #c=conn.execute(query)
+                curs=conn.cursor()
+                curs.execute(query, (comments,))
                 print "Successfully updated cluster: ",id,"<br>" 
 
         except:
