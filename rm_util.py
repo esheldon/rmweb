@@ -224,6 +224,22 @@ def get_cluster(id):
             cluster=Cluster(data[0])
     return cluster
 
+def get_nperpage(fs):
+    nperpage=fs.getfirst('nperpage',100)
+    try:
+        nperpage=int(nperpage)
+    except:
+        nperpage=100
+    return nperpage
+
+def get_page(fs):
+    page=fs.getfirst('page',1)
+    try:
+        page=int(page)
+    except:
+        page=1
+    return page
+
 def get_limit(fs):
     limit=fs.getfirst('limit',default_limit)
     if limit == '':
@@ -235,9 +251,9 @@ def print_search_form(fs):
         pattern = fs['pattern'].value
     else:
         pattern=''
-    limit=fs.getfirst('limit','100')
-    limit=get_limit(fs)
-    limset='value=%s' % limit
+
+    nperpage=get_nperpage(fs)
+    page=get_page(fs)
 
     if 'orderby' in fs:
         default_field=fs['orderby'].value
@@ -271,7 +287,8 @@ def print_search_form(fs):
     print "        <option value='{order}'>{order}".format(order=other_sortorder)
     print "    </select>"
     print "<br>"
-    print "    show top <input size=6 type='text' name='limit' %s> clusters ('all' or a number)" % limset
+    print "    show <input size=6 type='text' name='nperpage' value=%s> per page " % nperpage
+    print "    current page <input size=6 type='text' name='page' value=%s> " % page
 
     print "<br>"
     print "    Search <a target='_blank' href='examples.html'>(example searches)</a><br>"
@@ -303,15 +320,18 @@ def print_main_table(fs, **keys):
  
         if 'pattern' in fs:
             pattern=fs['pattern'].value
-            query="select * from %(tbname)s where %(pattern)s order by %(orderby)s %(sortorder)s"
+            query="select * from %(tbname)s where %(pattern)s order by %(orderby)s %(sortorder)s %(limits)s"
         else:
             pattern=''
-            query="select * from %(tbname)s order by %(orderby)s %(sortorder)s"
+            query="select * from %(tbname)s order by %(orderby)s %(sortorder)s %(limits)s"
 
-        limit=get_limit(fs)
-        if limit not in ['','all']:
-            query += ' limit %s' % limit
-        query=query % {'tbname':tbname,'pattern':pattern,'orderby':orderby,'sortorder':sortorder}
+        nperpage=get_nperpage(fs)
+        page=get_page(fs)
+
+        start=(page-1)*nperpage
+        limits = "limit %s, %s" % (start, nperpage)
+
+        query=query % {'tbname':tbname,'pattern':pattern,'orderby':orderby,'sortorder':sortorder,'limits':limits}
         c=conn.execute(query)
 
         print " <table class='main'>"
