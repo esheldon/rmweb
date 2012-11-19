@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Search Examples</title>
+    </head>
+    <p>
+    Let's select the object with id=3
+    <pre>
+    mem_match_id=3
+    </pre>
+
+    Select objects with high lambda and low z
+    <pre>
+    lambda_chisq > 100 and z_lambda < 0.2
+    </pre>
+
+    <p>
+    Select clusters where comments have been entered
+    <pre>
+    comments != ""
+    </pre>
+
+    <p>
+    Select clusters where the word "bad" is somewhere in the comments. 
+    <pre>
+    comments like '%bad%'
+    </pre>
+    The text within the % signs can be a regular expression.
+
+    <p>
+    More searches
+    <pre>
+    lambda_chisq between 100 and 150
+        and z_lambda between 0.25 and 0.3
+        and mem_match_id != 87
+    </pre>
+    <pre>
+    bcg_spec_z > 0 and abs(z_lambda -bcg_spec_z) > 0.04
+    </pre>
+</html>

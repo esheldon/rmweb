@@ -1,0 +1,77 @@
+body {
+     color: #CCCCCC;
+     /* font-family: sans-serif; */
+     background-color: black;
+}
+
+a:link {
+    text-decoration:none;
+    color: lightslategray;
+}
+a:visited {
+    text-decoration:none;
+    color: #528B8B;
+    //color: #2F4F4F;
+}
+
+
+
+b {color:lightblue}
+
+table.main
+{
+    border-collapse: collapse;
+}
+table.main td
+{
+    border-style: solid;
+    border-width: 1px;
+    padding: 3;
+    text-align: left;
+
+    background-color: #1C1C1C;
+    //border-color: #1C1C1C;
+    border-style: solid;
+    vertical-align: top;
+
+}
+table.main th
+{
+    border-style: solid;
+    border-width: 1px;
+    padding: 3;
+    text-align: left;
+}
+
+
+.mid
+{
+    color: lightblue;
+    background-color: white;
+    text-align: left;
+}
+
+
+table.cluster
+{
+    background-color: #1C1C1C;
+    border-width: 10pt;
+    border-color: #1C1C1C;
+    border-style: solid;
+    vertical-align: top;
+}
+table.cluster td
+{
+    vertical-align: top;
+}
+
+#noborder {display:inline}
+
+
+.mid
+{
+    color: lightblue;
+    background-color: black;
+}
+
+
