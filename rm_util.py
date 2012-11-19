@@ -64,9 +64,11 @@ def print_th_row():
     print '</tr>'
 
 def get_navi_url(ra,dec):
-    url='http://skyserver.sdss3.org/dr9/en/tools/chart/navi.asp?ra=%s&dec=%s'
-    url = url % (ra,dec)
-    return url
+    #url='http://skyserver.sdss3.org/dr9/en/tools/chart/navi.asp?opt=S&ra=%s&dec=%s'
+    #url = url % (ra,dec)
+    url='http://skyserver.sdss3.org/dr9/en/tools/chart/navi.asp?'
+    queries={'ra':ra,'dec':dec,'opt':'S'}
+    return url + urllib.urlencode(queries)
 
 def get_fchart_url(ra,dec,full=False):
     #url='http://skyservice.pha.jhu.edu/DR9/ImgCutout/getjpeg.aspx?ra=%(ra)s&dec=%(dec)s&scale=0.7922&width=512&height=512&opt=&query=%(query)s'
@@ -77,7 +79,8 @@ def get_fchart_url(ra,dec,full=False):
         width=800
         height=800
     else:
-        url='http://skyservice.pha.jhu.edu/DR8/ImgCutout/getjpeg.aspx?'
+        #url='http://skyservice.pha.jhu.edu/DR8/ImgCutout/getjpeg.aspx?'
+        url='http://skyservice.pha.jhu.edu/DR9/ImgCutout/getjpeg.aspx?'
         scale=0.792
         width=512
         height=512
@@ -88,8 +91,18 @@ def get_fchart_url(ra,dec,full=False):
     """.strip()
     query=query % {'ra':ra,'dec':dec}
 
-    queries={'ra':ra,'dec':dec,'query':query,'scale':scale,'width':width,'height':height}
+    queries={'ra':ra,'dec':dec,'query':query,'scale':scale,'width':width,'height':height,'opt':'S'}
     return url + urllib.urlencode(queries)
+
+def get_ned_url(ra, dec):
+    # ned doesn't accept high precision longitude
+    lon = '%.4f' % ra
+    lat = '%.6f' % dec
+    radius = '0.16667'
+    url='http://ned.ipac.caltech.edu/cgi-bin/objsearch?search_type=Near+Position+Search&in_csys=Equatorial&in_equinox=J2000.0&lon={lon}d&lat={lat}d&radius={radius}&hconst=73&omegam=0.27&omegav=0.73&corr_z=1&z_constraint=Unconstrained&z_value1=&z_value2=&z_unit=z&ot_include=ANY&nmp_op=ANY&out_csys=Equatorial&out_equinox=J2000.0&obj_sort=Distance+to+search+center&of=pre_text&zv_breaker=30000.0&list_limit=5&img_stamp=YES'
+    url=url.format(lon=lon, lat=lat, radius=radius)
+
+    return url
 
 class Cluster:
     def __init__(self, data):
@@ -132,6 +145,7 @@ class Cluster:
         navi=get_navi_url(self.data['ra'], self.data['dec'])
         fchart=get_fchart_url(self.data['ra'], self.data['dec'])
         fchart_full=get_fchart_url(self.data['ra'], self.data['dec'],full=True)
+        ned=get_ned_url(self.data['ra'], self.data['dec'])
 
         tit='cluster: %s' % id
         print_head(tit, type='cluster')
@@ -141,8 +155,9 @@ class Cluster:
         editlink = "<a target='_blank' href='./edit.py?id=%s'>Edit comments</a>" % id
         findlink = "<a target='_blank' href='%s'>finding chart</a>" % fchart_full
         navilink = "<a target='_blank' href='%s'>navigate</a>" % navi
+        nedlink = "<a target='_blank' href='%s'>ned</a>" % ned
 
-        link_list="%s | %s | %s" % (findlink,navilink,editlink)
+        link_list="%s | %s | %s | %s" % (findlink,navilink,nedlink,editlink)
 
         print "         <table class='cluster' width=1000>"
         print "           <tr>"
