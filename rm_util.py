@@ -201,26 +201,12 @@ class Cluster:
         update 
             %(tbname)s
         set 
-            comments='%(comments)s'
-        where
-            %(idname)s = %(id)s
-
-        """ % {'tbname':tbname,'idname':idname,
-               'comments':comments,
-               'id':id}
-
-        query="""
-        update 
-            %(tbname)s
-        set 
             comments=?
         where
             %(idname)s = %(id)s
 
         """ % {'tbname':tbname,'idname':idname,
                'id':id}
-
-
 
         try:
             with sqlite_util.SqliteConnection(dbfile) as conn:
