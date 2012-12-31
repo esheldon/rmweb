@@ -2,7 +2,7 @@ import urllib
 from collections import OrderedDict
 import sqlite_util
 
-vers='redmapper-dr8-4.15-lgt20'
+vers='redmapper-dr8-4.19'
 dbfile='%s.db' % vers
 tbname='rm'
 
